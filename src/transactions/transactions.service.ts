@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Model, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +10,7 @@ import {
 } from './schema/transaction.schema';
 
 import { TransferInformation } from '../types';
+import { Errors } from '../errors';
 
 @Injectable()
 export class TransactionsService {
@@ -20,7 +22,6 @@ export class TransactionsService {
   getBalanceForAccount = async (accountId: Types.ObjectId): Promise<number> => {
     try {
       const sums = await this.transactionModel.aggregate([
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         { $match: { user: accountId } },
         { $group: { _id: '$type', sum_val: { $sum: '$amount' } } },
@@ -33,7 +34,7 @@ export class TransactionsService {
       );
       return Promise.resolve(receiveTotals.sum_val - sentTotals.sum_val);
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.getBalanceForAccount);
     }
   };
 
@@ -59,7 +60,7 @@ export class TransactionsService {
         debitId: debitTransactionId,
       });
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.initiateTransfer);
     }
   };
 
@@ -72,7 +73,6 @@ export class TransactionsService {
       const { accountId, amount, type } = params;
       const transaction = new this.transactionModel();
       transaction._id = new Types.ObjectId();
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transaction.user = new Types.ObjectId(accountId);
       transaction.amount = amount;
@@ -81,7 +81,7 @@ export class TransactionsService {
       const savedTransaction = await transaction.save();
       return Promise.resolve(savedTransaction._id);
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.initiateTransaction);
     }
   };
 }

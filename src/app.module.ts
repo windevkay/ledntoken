@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
-import { LednOrmModule } from './ledn-orm/ledn-orm.module';
 
 @Module({
   imports: [
@@ -12,7 +11,6 @@ import { LednOrmModule } from './ledn-orm/ledn-orm.module';
     MongooseModule.forRoot(process.env.MONGODB_CONNECTION),
     AccountsModule,
     TransactionsModule,
-    LednOrmModule,
   ],
 })
 export class AppModule {}

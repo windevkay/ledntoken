@@ -12,6 +12,8 @@ import {
 
 import { TransactionsService } from '../transactions/transactions.service';
 
+import { Errors } from '../errors';
+
 @Injectable()
 export class AccountsService {
   constructor(
@@ -30,7 +32,7 @@ export class AccountsService {
       );
       return Promise.resolve({ account, balance });
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.getAccountInformation);
     }
   };
 
@@ -45,7 +47,7 @@ export class AccountsService {
       await this._middlewareUpdateAccountTransactions(accountId, transactionId);
       return Promise.resolve('success');
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.creditOrDebitAccount);
     }
   };
 
@@ -69,7 +71,7 @@ export class AccountsService {
       );
       return Promise.resolve('success');
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(Errors.performTransfer);
     }
   };
 
@@ -90,9 +92,13 @@ export class AccountsService {
     accountId: string,
     transactionId: string,
   ) => {
-    return await this.accountModel.updateOne(
-      { _id: new Types.ObjectId(accountId) },
-      { $addToSet: { transactions: transactionId } },
-    );
+    try {
+      return await this.accountModel.updateOne(
+        { _id: new Types.ObjectId(accountId) },
+        { $addToSet: { transactions: transactionId } },
+      );
+    } catch (error) {
+      return Promise.reject(error);
+    }
   };
 }
