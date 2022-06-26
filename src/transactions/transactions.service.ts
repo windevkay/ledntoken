@@ -19,11 +19,12 @@ export class TransactionsService {
     private transactionModel: Model<TransactionDocument>,
   ) {}
 
-  getBalanceForAccount = async (accountId: Types.ObjectId): Promise<number> => {
+  getBalanceForAccount = async (accountId: string): Promise<number> => {
     try {
+      const id = new Types.ObjectId(accountId);
       const sums = await this.transactionModel.aggregate([
         // @ts-ignore
-        { $match: { user: accountId } },
+        { $match: { user: id } },
         { $group: { _id: '$type', sum_val: { $sum: '$amount' } } },
       ]);
       const receiveTotals = sums.find(
