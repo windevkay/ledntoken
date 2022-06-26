@@ -57,8 +57,8 @@ export class AccountsService {
       const userForCredit = await this._middlewareGetAccount(to);
       const userForDebit = await this._middlewareGetAccount(from);
       const transferDetails = await this.transactionsService.initiateTransfer({
-        from: userForDebit._id,
-        to: userForCredit._id,
+        from: userForDebit._id.toString(),
+        to: userForCredit._id.toString(),
         amount,
       });
       await this._middlewareUpdateAccountTransactions(

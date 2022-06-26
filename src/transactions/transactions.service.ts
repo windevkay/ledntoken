@@ -39,8 +39,8 @@ export class TransactionsService {
   };
 
   initiateTransfer = async (params: {
-    from: any;
-    to: any;
+    from: string;
+    to: string;
     amount: number;
   }): Promise<TransferInformation> => {
     try {
@@ -65,7 +65,7 @@ export class TransactionsService {
   };
 
   initiateTransaction = async (params: {
-    accountId: any;
+    accountId: string;
     amount: number;
     type: TRANSACTION_TYPE;
   }): Promise<string> => {
